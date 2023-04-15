@@ -1,24 +1,25 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const imgSchema = Schema({
+const imgSchema = new Schema({
     img: { type: String },
-    path: { type: String },
 });
 
-const categorySchema = Schema({
-    catName: { type: String, required: true },
-    catImg: { type: imgSchema, required: true },
+const categorySchema = new Schema({
+    catName: { type: String },
+    catImg: { type: imgSchema },
 });
 
 const serieSchema = new Schema({
     title: { type: String, required: true },
     thumbnail: { type: imgSchema },
-    gallery: [{ type: imgSchema }],
-    category: [{ type: categorySchema, required: true }],
-    chapters: { type: Number, required: true },
-    emissionYear: { type: Number, required: true },
+    gallery: { type: [imgSchema] },
+    category: { type: [categorySchema], sparse: true },
+    chapters: { type: Number },
+    emissionYear: { type: Number} ,
     resume: { type: String, required: true, default: null },
 });
 
-module.exports = mongoose.model("Serie", serieSchema, "series2023");
+//serieSchema.index({ 'category.catName': 1 }, { unique: true });
+
+module.exports = mongoose.model("Serie", serieSchema, "series");

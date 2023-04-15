@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Serie } from 'src/app/common/serie';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { SerieModalComponent } from '../serie-modal/serie-modal.component';
+import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 @Component({
   selector: 'app-series-list',
   templateUrl: './series-list.component.html',
@@ -10,35 +12,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class SeriesListComponent implements OnInit {
 
+  modalRef: MdbModalRef<SerieModalComponent> | null = null;
+
   series: Serie[] = [];
-
-  formSerie: FormGroup = this.formBuilder.group({
-    _id: [''],
-    __v: [0],
-    title: [''],
-    emissionYear: [0],
-    category: [],
-    gallery: [],
-    resume: ['']
-  });
-
-  category: FormGroup = this.formBuilder.group({
-    _id: [''],
-    __v: [0],
-    catName: [''],
-    catImg: []
-  });
-
-  gallery: FormGroup = this.formBuilder.group({
-    img: [''],
-    path: ['']
-  });
-
-  edit = false;
 
   constructor(
     private serieService: SerieService,
-    private formBuilder: FormBuilder
+    private modalService: MdbModalService
   ) {
   }
 
@@ -50,49 +30,23 @@ export class SeriesListComponent implements OnInit {
     this.serieService.getSeriesList().subscribe(
       (data: any) => {
         this.series = data;
+        //console.log(data);
       }
     );
   }
 
-  loadSerie(serie: Serie): void {
-    this.formSerie.setValue(serie);
-    this.edit = true;
+  addSerie(): void {
+    this.openModal('Agregar Serie', null);
   }
 
-  resetFormSerie(): void {
-    this.formSerie.reset();
-    this.edit = false;
+  viewSerieDetails(id: string): void {
+    this.openModal('Detalles Serie', id);
   }
 
-  onSubmit(): void {
-    if (this.edit) {
-      const id = this.formSerie.getRawValue()._id;
-      this.serieService.updateSerie(id,
-        this.formSerie.getRawValue()).subscribe(
-          data => {
-            this.listSeries();
-          }
-        );
-    }
-    else {
-      this.serieService.addSerie(this.formSerie.getRawValue()).subscribe(
-        data => {
-          console.log(data);
-          this.listSeries();
-        }
-      )
-    }
+  openModal(titleModal: string, idSerie: string | null): void {
+    this.modalRef = this.modalService.open(SerieModalComponent,
+      {
+        data: { titleModal, idSerie },
+      });
   }
-
-  removeSerie(serie: Serie): void {
-    if (confirm('Desea borrar ' + serie.title + '?')) {
-      this.serieService.removeSerie(serie._id).subscribe(
-        data => {
-          console.log(data);
-          this.listSeries();
-        }
-      );
-    }
-  }
-
 }

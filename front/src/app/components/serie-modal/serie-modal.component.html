@@ -1,16 +1,45 @@
 <div class="modal-header">
-  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="modalRef.close()"
-  ></button>
+  <h5 class="modal-title" id="exampleModalLabel">{{ titleModal }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="modalRef.close()"></button>
 </div>
-<div class="modal-body">...</div>
+<form (ngSubmit)="onSubmit()">
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-3">
+
+      </div>
+      <div class="col-9">
+        <div class="form-floating mb-3">
+          <input formControlName="title" type="text" class="form-control" id="title"
+            value="{{formSerie.getRawValue().title}}" placeholder="Título">
+          <label for="title">Título</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input formControlName="emissionYear" type="number" class="form-control" id="emissionYear"
+            value="{{formSerie.getRawValue().emissionYear}}" placeholder="2023">
+          <label for="emissionYear">Año</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input formControlName="chapters" type="number" class="form-control" id="chapters"
+            value="{{formSerie.getRawValue().chapters}}" placeholder="0">
+          <label for="chapters">Número de Capítulos</label>
+        </div>
+        <div class="form-floating mb-3">
+          <textarea formControlName="resume" class="form-control" id="resume"
+            value="{{formSerie.getRawValue().resume}}" placeholder="Descripción"></textarea>
+          <label for="resume">Descripción</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 <div class="modal-footer">
+  <button type="button" class="btn btn-primary" *ngIf="(serie !== null) && !isEdit" (click)="editSerie()">Editar detalles</button>
+  <button type="button" class="btn btn-primary" *ngIf="(serie !== null) && isEdit" (click)="cancelEditSerie()">Cancelar edición</button>
+  <button type="button" class="btn btn-primary" *ngIf="(serie !== null) && isEdit">Guardar Cambios</button>
+  <button type="button" class="btn btn-primary" *ngIf="serie === null">Agregar serie</button>
+  <button type="button" class="btn btn-red" *ngIf="serie !== null" (click)="removeSerie(serie)">Eliminar serie</button>
   <button type="button" class="btn btn-secondary" (click)="modalRef.close()">
-    Close
+    Cerrar ventana
   </button>
-  <button type="button" class="btn btn-primary">Save changes</button>
 </div>

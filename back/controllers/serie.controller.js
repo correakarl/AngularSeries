@@ -13,7 +13,7 @@ serieCtrl.getSerie = async (req, res) => {
     const serie = await Serie.findById(req.params.id)
         .then((data) => {
             if (data != null) res.json(data)
-            else res.json({ status: 'Serie doesnt exist' })
+            else res.json({ status: 'Serie does not exist' })
         })
         .catch(err => console.log(err));
 }
@@ -30,16 +30,16 @@ serieCtrl.addSerie = async (req, res) => {
 // Función para actualizar una Serie con el id y la Serie con
 // los nuevos datos
 serieCtrl.updateSerie = async (req, res) => {
-    const serie = req.body;
-    await Serie.findByIdAndUpdate(
+    const mySerie = req.body;
+    await mySerie.findByIdAndUpdate(
         req.params.id,
-        { $set: serie },
+        { $set: mySerie },
         { new: true })
         .then((data) => {
             if (data != null) res.json({
                 status: 'Serie Successfully Updated', data
             })
-            else res.json({ status: 'Serie doesnt exist' })
+            else res.json({ status: 'Serie does not exist' })
         })
         .catch(err => res.send(err.message));
 }

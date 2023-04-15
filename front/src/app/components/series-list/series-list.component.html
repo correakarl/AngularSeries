@@ -1,1 +1,18 @@
-<p>testing serie list</p>
+<div class="container">
+  <h1 class="title-web">Listado de series</h1>
+  <button class="btn btn-primary" (click)="addSerie()">Agregar Serie</button>
+  <div class="container">
+    <div class="row">
+    <div class="card col-3" *ngFor="let serie of series">
+      <img src="{{serie.thumbnail.path}}{{serie.thumbnail.img}}" class="img-thumbnail" alt="..." />
+      <h2>{{serie.title}}</h2>
+      <p>{{serie.emissionYear}}</p>
+      <p *ngFor="let category of serie.category"> {{category.catName}}</p>
+      <button class="btn btn-primary" (click)="viewSerieDetails(serie._id)">Ver detalles</button>
+    </div>
+    <div class="col-3">
+      <button class="btn btn-primary" (click)="addSerie()">Agregar Serie</button>
+    </div>
+  </div>
+  </div>
+</div>

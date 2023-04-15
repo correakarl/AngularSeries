@@ -21,7 +21,7 @@ export class SerieService {
   }
 
   getSerie(id: string): Observable<Serie>{
-    return this.http.get<Serie>(this.baseURL+'/'+id);
+    return this.http.get<Serie>(this.baseURL+'/serie/'+id);
   }
 
   updateSerie(id: string, serie: Serie): Observable<any> {
