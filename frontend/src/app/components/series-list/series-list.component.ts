@@ -1,7 +1,7 @@
 import { SerieService } from './../../services/serie.service';
 import { Component, OnInit } from '@angular/core';
 import { Serie } from 'src/app/common/serie';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-series-list',
@@ -12,7 +12,7 @@ export class SeriesListComponent implements OnInit {
 
   series: Serie[] = [];
 
-  formSerie: FormGroup = this.formBuilder.group({
+  formSerie: UntypedFormGroup = this.formBuilder.group({
     _id: [''],
     __v: [0],
     title: [''],
@@ -22,14 +22,14 @@ export class SeriesListComponent implements OnInit {
     resume: ['']
   });
 
-  category: FormGroup = this.formBuilder.group({
+  category: UntypedFormGroup = this.formBuilder.group({
     _id: [''],
     __v: [0],
     catName: [''],
     catImg: []
   });
 
-  gallery: FormGroup = this.formBuilder.group({
+  gallery: UntypedFormGroup = this.formBuilder.group({
     img: [''],
     path: ['']
   });
@@ -38,7 +38,7 @@ export class SeriesListComponent implements OnInit {
 
   constructor(
     private serieService: SerieService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {
   }
 
