@@ -3,7 +3,7 @@ const serieCtrl = {};
 
 // Función que devuelve todas las Series
 serieCtrl.getSeries = async (req, res) => {
-    const series = await Serie.find()
+    const series = await Serie.find({}, '_id title thumbnail category emissionYear')
         .then((data) => res.json(data))
         .catch((err) => console.error(err));
 };

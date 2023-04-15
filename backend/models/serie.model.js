@@ -12,8 +12,9 @@ const categorySchema = Schema({
 });
 
 const serieSchema = new Schema({
-    imgList: [{ type: imgSchema }],
     title: { type: String, required: true },
+    thumbnail: { type: imgSchema },
+    gallery: [{ type: imgSchema }],
     category: [{ type: categorySchema, required: true }],
     chapters: { type: Number, required: true },
     emissionYear: { type: Number, required: true },

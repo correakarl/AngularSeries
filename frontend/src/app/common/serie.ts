@@ -13,7 +13,8 @@ interface category{
 export interface Serie {
   _id: string;
   title: string;
-  imgList: image[];
+  thumbnail: image;
+  gallery: image[];
   category: category[];
   chapters: number;
   emissionYear: number;
