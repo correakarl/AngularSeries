@@ -31,17 +31,21 @@ serieCtrl.addSerie = async (req, res) => {
 // los nuevos datos
 serieCtrl.updateSerie = async (req, res) => {
     const mySerie = req.body;
-    await mySerie.findByIdAndUpdate(
-        req.params.id,
-        { $set: mySerie },
-        { new: true })
-        .then((data) => {
-            if (data != null) res.json({
-                status: 'Serie Successfully Updated', data
+    if (req.params.id !== null) {
+        await Serie.findByIdAndUpdate(
+            req.params.id,
+            { $set: mySerie },
+            { new: true })
+            .then((data) => {
+                if (data != null) res.json({
+                    status: 'Serie Successfully Updated', data
+                })
+                else res.json({ status: 'Serie does not exist' })
             })
-            else res.json({ status: 'Serie does not exist' })
-        })
-        .catch(err => res.send(err.message));
+            .catch(err => res.send(err.message));
+    } else {
+        res.json({ status: 'ID can not be null' })
+    }
 }
 
 // Función para borrar una Serie dada un id

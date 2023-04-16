@@ -1,18 +1,35 @@
 <div class="container">
-  <h1 class="title-web">Listado de series</h1>
-  <button class="btn btn-primary" (click)="addSerie()">Agregar Serie</button>
+  <div class="container">
+    <h1 class="title-web">Listado de series</h1>
+    <button class="btn btn-primary" (click)="addSerie()">Agregar Serie</button>
+  </div>
+  <br />
   <div class="container">
     <div class="row">
-    <div class="card col-3" *ngFor="let serie of series">
-      <img src="{{serie.thumbnail.path}}{{serie.thumbnail.img}}" class="img-thumbnail" alt="..." />
-      <h2>{{serie.title}}</h2>
-      <p>{{serie.emissionYear}}</p>
-      <p *ngFor="let category of serie.category"> {{category.catName}}</p>
-      <button class="btn btn-primary" (click)="viewSerieDetails(serie._id)">Ver detalles</button>
+      <div class="col-3" *ngFor="let serie of series">
+        <div class="card row">
+          <div class="col-4">
+            <img src="{{serie.thumbnail.img}}" class="img-thumbnail" alt="..." />
+          </div>
+          <div class="col-8">
+            <div class="row">
+              <h2>{{serie.title}}</h2>
+            </div>
+            <div class="row">
+              <p>{{serie.emissionYear}}</p>
+            </div>
+            <div class="row">
+              <span *ngFor="let category of serie.category"> {{category.catName}}</span>
+            </div>
+            <div>
+              <button class="btn btn-primary" (click)="viewSerieDetails(serie._id)">Ver detalles</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card col-3">
+        <button class="btn btn-primary" (click)="addSerie()">Agregar Serie</button>
+      </div>
     </div>
-    <div class="col-3">
-      <button class="btn btn-primary" (click)="addSerie()">Agregar Serie</button>
-    </div>
-  </div>
   </div>
 </div>

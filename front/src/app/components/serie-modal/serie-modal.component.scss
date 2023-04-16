@@ -1,0 +1,16 @@
+.noteditable{
+  border: none;
+  background: transparent;
+}
+
+.noteditable:focus{
+  border: none;
+  box-shadow: none;
+}
+
+textarea{
+  height: fit-content;
+  max-height: 300px;
+  overflow: hidden;
+  overflow-x: auto;
+}

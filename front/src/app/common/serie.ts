@@ -1,17 +1,16 @@
-interface image{
-  _id: string;
+export interface image{
+  _id?: string;
   img: string;
-  path: string;
 }
 
-interface category{
-  _id: string;
+export interface category{
+  _id?: string;
   catName: string;
   catImg: image;
 }
 
 export interface Serie {
-  _id: string;
+  _id?: string;
   title: string;
   thumbnail: image;
   gallery: image[];

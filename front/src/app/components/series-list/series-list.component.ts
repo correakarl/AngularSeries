@@ -1,7 +1,6 @@
 import { SerieService } from './../../services/serie.service';
 import { Component, OnInit } from '@angular/core';
 import { Serie } from 'src/app/common/serie';
-import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { SerieModalComponent } from '../serie-modal/serie-modal.component';
 import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
@@ -39,14 +38,20 @@ export class SeriesListComponent implements OnInit {
     this.openModal('Agregar Serie', null);
   }
 
-  viewSerieDetails(id: string): void {
+  viewSerieDetails(id?: string): void {
     this.openModal('Detalles Serie', id);
   }
 
-  openModal(titleModal: string, idSerie: string | null): void {
+  openModal(titleModal: string, idSerie?: string | null): void {
     this.modalRef = this.modalService.open(SerieModalComponent,
       {
         data: { titleModal, idSerie },
       });
+      this.modalRef.onClose.subscribe(
+        res => {
+          console.log(res);
+          this.listSeries();
+        }
+      )
   }
 }

@@ -10,6 +10,7 @@ import { MdbModalModule } from 'mdb-angular-ui-kit/modal';
 import { SeriesListComponent } from './components/series-list/series-list.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { SerieModalComponent } from './components/serie-modal/serie-modal.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,8 @@ import { SerieModalComponent } from './components/serie-modal/serie-modal.compon
     AppRoutingModule,
     HttpClientModule,
     MdbModalModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
