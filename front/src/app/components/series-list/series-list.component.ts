@@ -1,37 +1,33 @@
-import { SerieService } from './../../services/serie.service';
 import { Component, OnInit } from '@angular/core';
-import { Serie } from 'src/app/common/serie';
+import { CommonModule } from '@angular/common';
 
+import { Serie } from '../../common/serie';
+import { SerieService } from '../../services/serie.service';
 import { SerieModalComponent } from '../serie-modal/serie-modal.component';
-import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+
 @Component({
   selector: 'app-series-list',
+  imports: [CommonModule, SerieModalComponent],
   templateUrl: './series-list.component.html',
-  styleUrls: ['./series-list.component.scss']
+  styleUrls: ['./series-list.component.scss'],
 })
 export class SeriesListComponent implements OnInit {
-
-  modalRef: MdbModalRef<SerieModalComponent> | null = null;
-
   series: Serie[] = [];
 
-  constructor(
-    private serieService: SerieService,
-    private modalService: MdbModalService
-  ) {
-  }
+  showModal = false;
+  modalTitle = '';
+  modalIdSerie: string | null = null;
+
+  constructor(private serieService: SerieService) {}
 
   ngOnInit(): void {
     this.listSeries();
   }
 
   listSeries(): void {
-    this.serieService.getSeriesList().subscribe(
-      (data: any) => {
-        this.series = data;
-        //console.log(data);
-      }
-    );
+    this.serieService.getSeriesList().subscribe((data: Serie[]) => {
+      this.series = data;
+    });
   }
 
   addSerie(): void {
@@ -39,19 +35,17 @@ export class SeriesListComponent implements OnInit {
   }
 
   viewSerieDetails(id?: string): void {
-    this.openModal('Detalles Serie', id);
+    this.openModal('Detalles Serie', id ?? null);
   }
 
-  openModal(titleModal: string, idSerie?: string | null): void {
-    this.modalRef = this.modalService.open(SerieModalComponent,
-      {
-        data: { titleModal, idSerie },
-      });
-      this.modalRef.onClose.subscribe(
-        res => {
-          console.log(res);
-          this.listSeries();
-        }
-      )
+  openModal(titleModal: string, idSerie: string | null): void {
+    this.modalTitle = titleModal;
+    this.modalIdSerie = idSerie;
+    this.showModal = true;
+  }
+
+  onModalClose(): void {
+    this.showModal = false;
+    this.listSeries();
   }
 }

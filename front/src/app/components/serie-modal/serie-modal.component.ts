@@ -1,36 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { SerieService } from './../../services/serie.service';
-import { Serie, image, category } from 'src/app/common/serie';
+import { Serie, image, category } from '../../common/serie';
+import { SerieService } from '../../services/serie.service';
 
 @Component({
   selector: 'app-serie-modal',
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './serie-modal.component.html',
-  styleUrls: ['./serie-modal.component.scss']
+  styleUrls: ['./serie-modal.component.scss'],
 })
 export class SerieModalComponent implements OnInit {
+  @Input() titleModal: string | null = null;
+  @Input() idSerie: string | null = null;
+  @Output() closed = new EventEmitter<void>();
 
   serie: Serie;
 
-  titleModal: string | null = null;
-
-  idSerie: string | null = null;
-
-  formSerie: FormGroup = this.formBuilder.group({
-    _id: [''],
-    __v: [0],
-    title: [''],
-    chapters: [0],
-    thumbnail: this.formBuilder.group({
-      img:['']
-    }),
-    emissionYear: [0],
-    category: [],
-    gallery: [],
-    resume: ['']
-  });
+  formSerie: FormGroup;
 
   categories: category[];
 
@@ -40,78 +28,82 @@ export class SerieModalComponent implements OnInit {
 
   isNewSerie = false;
 
-  constructor(
-    public modalRef: MdbModalRef<SerieModalComponent>,
-    private formBuilder: FormBuilder,
-    private serieService: SerieService
-  ) {
+  myNewCategory = new FormGroup({
+    newCat: new FormControl(''),
+  });
+
+  constructor(private formBuilder: FormBuilder, private serieService: SerieService) {
     this.categories = this.gallery = [];
-    let thumb: image = { img:'' };
-    this.serie = {_id:'', title: '', chapters: 0, emissionYear: 0, resume: '', gallery: [], category: [], thumbnail: thumb};
+    const thumb: image = { img: '' };
+    this.serie = {
+      _id: '',
+      title: '',
+      chapters: 0,
+      emissionYear: 0,
+      resume: '',
+      gallery: [],
+      category: [],
+      thumbnail: thumb,
+    };
+    this.formSerie = this.formBuilder.group({
+      _id: [''],
+      __v: [0],
+      title: [''],
+      chapters: [0],
+      thumbnail: this.formBuilder.group({
+        img: [''],
+      }),
+      emissionYear: [0],
+      category: [],
+      gallery: [],
+      resume: [''],
+    });
   }
 
   ngOnInit(): void {
-
     if (this.idSerie === null) {
       this.isNewSerie = true;
       this.loadSerie(this.serie);
     } else {
       this.isNewSerie = false;
-      this.serieService.getSerie(this.idSerie).subscribe(
-        data => {
-          this.serie = data;
-          this.loadSerie(this.serie);
-          //console.log(data);
-        }
-      );
+      this.serieService.getSerie(this.idSerie).subscribe((data) => {
+        this.serie = data;
+        this.loadSerie(this.serie);
+      });
     }
+  }
+
+  close(): void {
+    this.closed.emit();
   }
 
   onSubmit(): void {
     if (this.isEdit) {
-      const id = (this.idSerie !== null)?this.idSerie:'';
-      this.serieService.updateSerie(
-        this.formSerie.getRawValue()).subscribe(
-          data => {
-            console.log(data);
-            this.modalRef.close('reload');
-            //this.listSeries();
-          },
-          error => {
-            console.log(error);
-          }
-        ),
-        id
+      const id = this.idSerie !== null ? this.idSerie : '';
+      this.serieService.updateSerie(this.formSerie.getRawValue(), id).subscribe(
+        () => this.close(),
+        (error) => console.log(error)
+      );
     } else {
-      //console.log(this.formSerie.getRawValue());
-
+      const raw = this.formSerie.getRawValue();
       const formData = {
-        title: this.formSerie.getRawValue().title,
-        chapters: this.formSerie.getRawValue().chapters,
-        thumbnail: {
-          img: this.formSerie.getRawValue().thumbnail.img
-        },
-        emissionYear: this.formSerie.getRawValue().emissionYear,
+        title: raw.title,
+        chapters: raw.chapters,
+        thumbnail: { img: raw.thumbnail.img },
+        emissionYear: raw.emissionYear,
         category: [],
         gallery: [],
-        resume: this.formSerie.getRawValue().resume
+        resume: raw.resume,
       };
 
-      this.serieService.addSerie(formData).subscribe(
-        data => {
-          console.log(data);
-          this.modalRef.close('reload');
-          //this.listSeries();
-        },
-        error => {
-          console.log(error);
-        }
-      )
+      this.serieService.addSerie(formData as Serie).subscribe(
+        () => this.close(),
+        (error) => console.log(error)
+      );
     }
   }
 
   loadSerie(serie: Serie): void {
-    console.log(serie);
     this.formSerie.setValue(serie);
     this.categories = serie.category;
     this.gallery = serie.gallery;
@@ -127,20 +119,11 @@ export class SerieModalComponent implements OnInit {
 
   removeSerie(serie: Serie): void {
     if (confirm('Desea borrar ' + serie.title + '?')) {
-      this.serieService.removeSerie(serie._id).subscribe(
-        data => {
-          console.log(data);
-          this.modalRef.close('reload');
-        }
-      );
+      this.serieService.removeSerie(serie._id).subscribe(() => this.close());
     }
   }
 
   getImage(i: image): string {
-    return (i.img !== null)?i.img:'#';
+    return i.img !== null ? i.img : '#';
   }
-
-  myNewCategory = new FormGroup({
-    newCat: new FormControl('')
-    });
 }

@@ -33,3 +33,10 @@
     </div>
   </div>
 </div>
+
+<app-serie-modal
+  *ngIf="showModal"
+  [titleModal]="modalTitle"
+  [idSerie]="modalIdSerie"
+  (closed)="onModalClose()"
+></app-serie-modal>
